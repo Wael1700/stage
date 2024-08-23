@@ -74,7 +74,7 @@ Route::post('/create', function () {
         'description' => $validatedData['description'],
     ]);
 
-    // Redirect with a success message
+    
     return redirect()->route('create_produit')->with('success', 'Product created successfully.');
 })->name('create_produit');
 
