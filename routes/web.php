@@ -6,6 +6,7 @@ use App\Models\Produit;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/test/{subyear}', TimeController::class);
 
 Route::get('/', function () {
@@ -126,11 +127,59 @@ Route::get('/cart', function () {
     ]);
 })->name('cart')->middleware('auth');
 Route::delete('/cart/remove/{id}', function ($id) {
-    $cartItem = Cart::findOrFail($id);
+    $user = auth()->user();
+    $cartItem = $user->carts()->findOrFail($id);
     $cartItem->delete();
 
     return redirect()->route('cart')->with('success', 'Produit retiré du panier avec succès.');
 })->name('delete_cart')->middleware('auth');
+Route::get('/produits/{id}/', function($id){
+    $user = auth()->user();
+    $produit = $user->produits()->findOrFail($id);
+    $cartCount = Cart::where('user_id', $user->id)->count();
+    return view('edit_produit', [
+        'produit'=>$produit,
+        'cartCount' => $cartCount
+    ]);
+})->name('edit_produit')->middleware('auth');
+Route::post('/produits/{id}/edit', function($id){
+   
+    $validatedData = Request::validate([
+        'name_produit' => 'required|string|max:255',
+        'prix' => 'required|numeric',
+        'lieu' => 'required|string|max:255',
+        'description' => 'required|string',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+    ]);
+
+    // Récupérer l'utilisateur authentifié
+    $user = Auth::user();
+
+    // Trouver le produit par ID et s'assurer qu'il appartient à l'utilisateur
+    $produit = $user->produits()->findOrFail($id);
+
+    // Mettre à jour les champs du produit
+    $produit->name_produit = $validatedData['name_produit'];
+    $produit->prix = $validatedData['prix'];
+    $produit->lieu = $validatedData['lieu'];
+    $produit->description = $validatedData['description'];
+
+    // Si une nouvelle photo a été téléchargée, la traiter
+    if (Request::hasFile('photo')) {
+        // Supprimer l'ancienne photo si nécessaire
+        if ($produit->photo) {
+            \Storage::disk('public')->delete($produit->photo);
+        }
+        // Stocker la nouvelle photo
+        $path = Request::file('photo')->store('photos', 'public');
+        $produit->photo = $path;
+    }
+
+    // Sauvegarder les modifications
+    $produit->save();
+
+    return redirect()->route('edit_produit',['id' => $id])->with('success', 'Produit modifié avec succès !');
+})->name('update_produit')->middleware('auth');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -367,14 +367,19 @@
 
     
             <div class="button-group">
+    <!-- Bouton Edit -->
+    <form action="{{ route('edit_produit',  ['id' => $produit->id]) }}" method="GET">
+    @csrf
+        <button type="submit" class="btn-edit">Edit</button>
+    </form>
 
-
-            <form action="{{ route('delete_produit', $produit->id) }}" method="POST">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn-delete">Delete</button>
-            </form>
-            </div>
+    <!-- Bouton Delete -->
+    <form action="{{ route('delete_produit', $produit->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn-delete">Delete</button>
+    </form>
+</div>
         </div>
     @endforeach
 </div>
