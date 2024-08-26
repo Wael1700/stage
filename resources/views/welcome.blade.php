@@ -355,9 +355,9 @@
 <div class="pagination-links">
     <ul class="pagination">
         {{-- Lien vers la page précédente --}}
-        @if($currentPage > 1)
+        @if($produits->currentPage() > 1)
             <li class="page-item">
-                <a class="page-link" href="?page={{ $currentPage - 1 }}">« Previous</a>
+                <a class="page-link" href="{{ $produits->previousPageUrl() }}">« Previous</a>
             </li>
         @else
             <li class="page-item disabled">
@@ -366,18 +366,16 @@
         @endif
 
         {{-- Boucle pour générer les numéros de pages --}}
-        @for ($page = 1; $page <= $totalPages; $page++)
-            @if ($page == $currentPage)
-                <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-            @else
-                <li class="page-item"><a class="page-link" href="?page={{ $page }}">{{ $page }}</a></li>
-            @endif
+        @for ($page = 1; $page <= $produits->lastPage(); $page++)
+            <li class="page-item {{ $page == $produits->currentPage() ? 'active' : '' }}">
+                <a class="page-link" href="{{ $produits->url($page) }}">{{ $page }}</a>
+            </li>
         @endfor
 
         {{-- Lien vers la page suivante --}}
-        @if($currentPage < $totalPages)
+        @if($produits->hasMorePages())
             <li class="page-item">
-                <a class="page-link" href="?page={{ $currentPage + 1 }}">Next »</a>
+                <a class="page-link" href="{{ $produits->nextPageUrl() }}">Next »</a>
             </li>
         @else
             <li class="page-item disabled">
