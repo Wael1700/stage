@@ -53,20 +53,34 @@
             align-items: center;
         }
 
-        .search-container {
+        .form-container {
             margin-top: 20px;
             width: 100%;
             max-width: 600px;
-            display: flex;
-            justify-content: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #5a4335;
         }
 
         .form-control {
-            width: 80%;
+            width: 100%;
             padding: 10px;
             border: 1px solid #5a4335;
             border-radius: 0.25rem;
-            margin-right: 10px;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         .btn-primary {
@@ -77,6 +91,7 @@
             border-radius: 0.25rem;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%;
         }
 
         .btn-primary:hover {
@@ -98,6 +113,7 @@
             border-radius: 0.25rem;
             padding: 15px;
             text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .product-item img {
@@ -123,32 +139,6 @@
             color: green;
             font-weight: bold;
         }
-        .product-link {
-    text-decoration: none; /* Remove underline */
-}
-
-.product-item {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-item:hover {
-    transform: scale(1.05); /* Slight zoom effect */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow */
-}
-.cart-link {
-            text-decoration: none;
-            color: #5a4335;
-            font-size: 16px;
-            padding: 10px 20px;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-.cart-link {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.cart-link :hover {
-    transform: scale(1.05); /* Slight zoom effect */
-}
         .dropbtn {
         background-color: transparent;
         border: none;
@@ -185,13 +175,13 @@
     }
         
 
-
+/* The container <div> - needed to position the dropdown content */
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
-
+/* Dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -209,65 +199,72 @@
     display: block;
 }
 
-
+/* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-
+/* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
+/* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
 }
-.pagination-links {
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds space between buttons */
     margin-top: 20px;
-    display: flex;
-    justify-content: center;
 }
 
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    gap: 5px;
+.btn-edit, .btn-delete {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.page-item {
-    display: inline-block;
+.btn-edit {
+    background-color: green;
+    color: white;
 }
 
-.page-link {
-    color: #5a4335; /* Couleur du texte */
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    border: 1px solid #5a4335; /* Couleur de la bordure */
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-delete {
+    background-color: red;
+    color: white;
 }
 
-.page-link:hover {
-    background-color: #5a4335; /* Couleur de fond au survol */
-    color: white; /* Couleur du texte au survol */
+.btn-edit:hover {
+    background-color: darkgreen;
 }
 
-.page-item.active .page-link {
-    background-color: #5a4335; /* Couleur de fond de la page active */
-    color: white; /* Couleur du texte de la page active */
-    border-color: #5a4335; /* Couleur de la bordure de la page active */
-    font-weight: bold;
+.btn-delete:hover {
+    background-color: darkred;
 }
-
-.page-item.disabled .page-link {
-    color: #ccc;
-    pointer-events: none;
-    border-color: #ccc;
+.cart-link {
+            text-decoration: none;
+            color: #5a4335;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+.cart-link {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.cart-link :hover {
+    transform: scale(1.05); /* Slight zoom effect */
 }
 
     </style>
+
+
+
 </head>
 <body>
 <header class="header">
@@ -294,7 +291,7 @@
         {{ $cartCount }}
     </span>
 </a>
-
+                <!-- Simple Profile Dropdown using <a> and CSS -->
                 <div class="dropdown">
                 <button class="nav-link">{{ Auth::user()->name }}</button>
                  <div class="dropdown-content">
@@ -321,69 +318,42 @@
     @endif
 </header>
 
-    <div class="content">
-    
-        <div class="search-container">
-            <form action="{{ route('produit') }}" method="GET" style="display: flex; width: 100%;">
-                @csrf
-                <input type="text" id="search" name="search" class="form-control" value="{{ request('search') }}" placeholder="Nom du produit">
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </form>
-        </div>
-
-       
-        <div class="product-grid">
-    @foreach($produits as $produit) 
-        @auth
-            
-            <a href="{{ url('/product/' . $produit->id) }}" class="product-link">
-        @else
-            
-            <a href="{{ route('login') }}" class="product-link">
-        @endauth
-            <div class="product-item">
-                <div style="width: 200px; height: 300px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                    <img src="{{ asset('storage/' . $produit->photo) }}" alt="{{ $produit->name_produit }}" style="max-width: 100%; max-height: 100%;">
-                </div>
-                <h3>{{ $produit->name_produit }}</h3>
-                <p>Vendu d'ou: <strong style="color:green;">{{ $produit->lieu }}</strong></p>
-                <p class="price">{{ $produit->prix }}DH</p>
+ <div class="content">
+    <h2>Modifier le Produit</h2>
+    <div class="form-container">
+        <form action="{{ route('update_produit', $produit->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="name_produit">Nom du Produit:</label>
+                <input type="text" id="name_produit" name="name_produit" value="{{ $produit->name_produit }}" required class="form-control">
             </div>
-        </a>
-    @endforeach
-</div>
-<div class="pagination-links">
-    <ul class="pagination">
-        {{-- Lien vers la page précédente --}}
-        @if($produits->currentPage() > 1)
-            <li class="page-item">
-                <a class="page-link" href="{{ $produits->previousPageUrl() }}">« Previous</a>
-            </li>
-        @else
-            <li class="page-item disabled">
-                <span class="page-link">« Previous</span>
-            </li>
-        @endif
 
-        {{-- Boucle pour générer les numéros de pages --}}
-        @for ($page = 1; $page <= $produits->lastPage(); $page++)
-            <li class="page-item {{ $page == $produits->currentPage() ? 'active' : '' }}">
-                <a class="page-link" href="{{ $produits->url($page) }}">{{ $page }}</a>
-            </li>
-        @endfor
+            <div class="form-group">
+                <label for="prix">Prix:</label>
+                <input type="text" id="prix" name="prix" value="{{ $produit->prix }}" required class="form-control">
+            </div>
 
-        {{-- Lien vers la page suivante --}}
-        @if($produits->hasMorePages())
-            <li class="page-item">
-                <a class="page-link" href="{{ $produits->nextPageUrl() }}">Next »</a>
-            </li>
-        @else
-            <li class="page-item disabled">
-                <span class="page-link">Next »</span>
-            </li>
-        @endif
-    </ul>
-</div>
+            <div class="form-group">
+                <label for="lieu">Lieu:</label>
+                <input type="text" id="lieu" name="lieu" value="{{ $produit->lieu }}" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required class="form-control">{{ $produit->description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="photo">Photo:</label>
+                <input type="file" id="photo" name="photo" class="form-control">
+                <small>Current Image:</small><br>
+                <img src="{{ asset('storage/' . $produit->photo) }}" alt="Current Image" style="width: 100px; margin-top: 10px;">
+            </div>
+
+            <button type="submit" class="btn-primary">Mettre à jour le Produit</button>
+            
+        </form>
     </div>
+</div>
 </body>
 </html>

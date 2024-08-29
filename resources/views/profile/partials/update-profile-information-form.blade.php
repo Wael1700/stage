@@ -1,4 +1,101 @@
 <section>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5EFE6;
+            color: #333;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .font-medium {
+            font-weight: 500;
+        }
+
+        .text-gray-900 {
+            color: #1a1a1a;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-gray-600 {
+            color: #6b7280;
+        }
+
+        .block {
+            display: block;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-y-reverse: 0;
+            margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+            margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+        }
+
+        .form-input {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #5a4335;
+            outline: none;
+        }
+
+        .text-input-error {
+            color: red;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background-color: red;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: darkred;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+    </style>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Profile Information') }}

@@ -9,18 +9,21 @@ class Cart extends Model
 {
     use HasFactory;
 
-    // Nom de la table associé au modèle
+    
     protected $table = 'cart';
 
-    // Les attributs qui peuvent être assignés en masse
     protected $fillable = [
-        'produit_id',
         'user_id'
     ];
 
-    // Définir les relations
-    public function produit()
+   
+    public function produits()
     {
-        return $this->belongsTo(Produit::class, 'produit_id');
+        return $this->belongsToMany(Produit::class, 'cart_produit');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
 }
