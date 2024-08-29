@@ -10,18 +10,25 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CartController;
 
-Route::get('/', [HomeController::class, 'Home'])->name('produit');
+Route::get('/', [HomeController::class, 'index'])->name('produit');
 
-Route::get('/create', [ProduitController::class, 'contenu'])->middleware(['auth', 'verified'])->name('aff_produit');
+Route::get('/create', [ProduitController::class, 'store'])->middleware(['auth', 'verified'])->name('aff_produit');
 Route::post('/create', [ProduitController::class, 'create'])->name('create_produit');
-Route::get('/product/{id}', [ProduitController::class, 'affichage'])->middleware('auth')->name('aff_produit');
-Route::delete('/produit/{id}', [ProduitController::class, 'delete'])->middleware('auth')->name('delete_produit');
-Route::get('/produits/{id}/', [ProduitController::class, 'edit'])->middleware('auth')->name('edit_produit');
-Route::post('/produits/{id}/edit', [ProduitController::class, 'update'])->middleware('auth')->name('update_produit');
+Route::get('/product/{id}', [ProduitController::class, 'show'])->middleware('auth')->name('aff_produit');
+Route::delete('/product/{id}', [ProduitController::class, 'destroy'])->middleware('auth')->name('delete_produit');
+Route::get('/products/{id}/', [ProduitController::class, 'edit'])->middleware('auth')->name('edit_produit');
+Route::post('/products/{id}/edit', [ProduitController::class, 'update'])->middleware('auth')->name('update_produit');
 
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->middleware('auth')->name('add_cart');
-Route::get('/cart', [CartController::class, 'cartpage'])->middleware('auth')->name('cart');
-Route::delete('/cart/remove/{id}', [CartController::class, 'delete'])->middleware('auth')->name('delete_cart');
+
+Route::middleware('auth')->group(function () {
+Route::post('/cart/add/{id}', [CartController::class, 'create'])->middleware('auth')->name('add_cart');
+Route::get('/cart', [CartController::class, 'store'])->middleware('auth')->name('cart');
+Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->middleware('auth')->name('delete_cart');
+});
+
+
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

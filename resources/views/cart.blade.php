@@ -384,13 +384,13 @@
 <div class="cart-container">
     @foreach($cartItems as $item)
         <div class="cart-item">
-            <img src="{{ asset('storage/' . $item->produit->photo) }}" alt="{{ $item->produit->name_produit }}">
+            <img src="{{ asset('storage/' . $item->photo) }}" alt="{{ $item->name_produit }}">
             <div class="cart-item-info">
-                <h3>{{ $item->produit->name_produit }}</h3>
-                <p>Description: {{ $item->produit->description }}</p>
+                <h3>{{ $item->name_produit }}</h3>
+                <p>Description: {{ $item->description }}</p>
             </div>
             <div class="cart-item-price">
-                {{ $item->produit->prix }} DH
+                {{ $item->prix }} DH
             </div>
             <div class="cart-item">
                 <form action="{{ route('delete_cart', $item->id) }}" method="POST">

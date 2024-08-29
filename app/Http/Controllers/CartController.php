@@ -9,19 +9,18 @@ use App\Models\Cart;
 
 class CartController extends Controller
 {
-    public function add($id)
+    public function create($id)
     {
         $produit = Produit::findOrFail($id); 
         $userId = Auth::id(); 
 
-
-        $cartItem = Cart::where('produit_id', $id)->where('user_id', $userId)->first();
+        $cart = Cart::firstOrCreate([
+            'user_id' => $userId,
+        ]);
+        $cartItem = $cart->produits()->where('produit_id', $id)->first();
         if (!$cartItem) {
             
-            Cart::create([
-                'produit_id' => $id,
-                'user_id' => $userId,
-            ]);
+            $cart->produits()->attach($id);
         }
 
         
@@ -29,17 +28,18 @@ class CartController extends Controller
     }
 
 
-    public function cartpage()
+    public function store()
     {
         $userId = Auth::id(); 
 
-        
-        $cartItems = Cart::where('user_id', $userId)->with('produit')->get();
+  
+        $cart = Cart::where('user_id', $userId)->first();
 
         
-        $total = $cartItems->sum(function ($item) {
-            return $item->produit->prix;
-        });
+        $cartItems = $cart->produits()->get();
+
+        
+        $total = $cartItems->sum('prix');
 
         
         return view('cart', [
@@ -48,12 +48,13 @@ class CartController extends Controller
             'total' => $total
         ]);
     }
-
-    public function delete($id)
+    
+    public function destroy($id)
     {
         $user = auth()->user(); 
-        $cartItem = $user->carts()->findOrFail($id); 
-        $cartItem->delete(); 
+        $cart = Cart::where('user_id', $user->id)->first();
+        $cart->produits()->detach($id);
+         
 
         return redirect()->route('cart')->with('success', 'Produit retiré du panier avec succès.');
     }

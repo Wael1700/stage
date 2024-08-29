@@ -6,14 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Produit;
 use App\Models\Cart;
-
+use Illuminate\Support\Facades\Storage;
 class ProduitController extends Controller
 {
-    public function contenu()
+    public function store()
     {
         $user = Auth::user(); 
         $produits = Produit::where('user_id', $user->id)->get(); 
-        $cartCount = Cart::where('user_id', $user->id)->count(); 
+        $cart = Cart::where('user_id', $user->id)->first(); 
+        $cartCount = $cart->produits()->count();
         return view('create_produit', [
             'produits' => $produits,
             'cartCount' => $cartCount,
@@ -55,11 +56,12 @@ class ProduitController extends Controller
     }
 
 
-    public function affichage($id)
+    public function show($id)
     {
         $user = Auth::user(); 
         $produit = Produit::findOrFail($id); 
-        $cartCount = Cart::where('user_id', $user->id)->count(); 
+        $cart = Cart::where('user_id', $user->id)->first(); 
+        $cartCount = $cart->produits()->count();
         return view('aff_produit', [
             'produit' => $produit,
             'cartCount' => $cartCount
@@ -67,7 +69,7 @@ class ProduitController extends Controller
     }
 
 
-    public function delete($id)
+    public function destroy($id)
     {
         $user = auth()->user(); 
         $produit = $user->produits()->findOrFail($id); 
@@ -81,7 +83,8 @@ class ProduitController extends Controller
     {
         $user = auth()->user(); 
         $produit = $user->produits()->findOrFail($id); 
-        $cartCount = Cart::where('user_id', $user->id)->count(); 
+        $cart = Cart::where('user_id', $user->id)->first(); 
+        $cartCount = $cart->produits()->count();
         return view('edit_produit', [
             'produit' => $produit,
             'cartCount' => $cartCount
